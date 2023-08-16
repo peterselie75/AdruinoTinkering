@@ -7,6 +7,8 @@ const int echoPin = 10;
 // defining variables
 long duration;
 int distance;
+int testVariable;
+//this is my comment!!
 void setup()
 {
     pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
