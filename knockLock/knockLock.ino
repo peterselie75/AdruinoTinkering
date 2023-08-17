@@ -49,9 +49,53 @@ void loop()
     {
       locked = true;
       digitalWrite(greenLED,LOW);
-
+      digitalWrite(redLED,HIGH);
+      myServo.write(90);
+      Serial.println("the box is locked");
     }      
   }
+  if(locked==true)
+  {
+    knockVal = analogRead(piezo);
+    if(numberOfKnocks < 3 && knockVal > 0) //chrcks two conditions to be met
+    {
+      if (checkForKnock(knockVal) == true) //check if it is a valid knock
+      {
+        numberOfKnocks ++; //add one
+      }
+          // subtract knocks made so far
+      Serial.print(3-numberOfKnocks);
+      Serial.print( "more knocks to go");
+    }
+  }
+  if(numberOfKnocks >=3)
+  {
+    locked = false;
+    myServo.write(0);
+    delay(20);
+    digitalWrite(greenLED, HIGH);
+    digitalWrite(redLED, LOW);
+    Serial.println("the box is unlocked");
+  }
+
 }                   
                    
+boolean checkForKnock(int value) 
+{
+  if(value > quietKnock && value < loudKnock)
+  {
+    digitalWrite(yellowLED, HIGH);
+    delay(50);
+    digitalWrite(yellowLED, LOW);
+    Serial.print("valid knock of value ");
+    Serial.println(value);
+    return true;
       
+  }
+  else
+  {
+    Serial.print("Bad knock value ");
+    Serial.println(value);
+    return false;
+  }
+}    // end of the function
